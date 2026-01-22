@@ -9,20 +9,26 @@ Scrape a job board with requests and BeautifulSoup, then email yourself weekly j
 ├── scraper.py       # requests + BeautifulSoup logic
 ├── emailer.py       # smtplib email sending
 ├── config.py        # Configuration settings
-├── requirements.txt # Python dependencies
+├── pyproject.toml   # Project dependencies (uv)
 ├── .env.example     # Template for environment variables
 └── sent_jobs.json   # Tracks sent jobs (auto-generated)
 ```
 
-## Setup
+## Setup (macOS)
 
-### 1. Install Dependencies
+### 1. Install uv
 
 ```bash
-pip install -r requirements.txt
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### 2. Configure Environment Variables
+### 2. Install Dependencies
+
+```bash
+uv sync
+```
+
+### 3. Configure Environment Variables
 
 ```bash
 cp .env.example .env
@@ -37,7 +43,7 @@ RECIPIENT_EMAIL=your_email@gmail.com
 JOB_BOARD_URL=https://your-target-jobboard.com/jobs
 ```
 
-### 3. Gmail App Password Setup
+### 4. Gmail App Password Setup
 
 For Gmail, you need an App Password (not your regular password):
 
@@ -45,7 +51,7 @@ For Gmail, you need an App Password (not your regular password):
 2. Select "Mail" and your device
 3. Copy the 16-character password to your `.env` file
 
-### 4. Customize the Scraper
+### 5. Customize the Scraper
 
 Edit `scraper.py` to match your target job board's HTML structure. Update the CSS selectors in `parse_jobs()`:
 
@@ -59,24 +65,39 @@ title_elem = card.select_one(".job-title")  # Update for your site
 ### Run Manually
 
 ```bash
-python main.py
+uv run python main.py
 ```
 
-### Schedule Weekly (Cron - macOS/Linux)
+### Schedule Weekly (macOS launchd)
+
+launchd is the recommended way to schedule tasks on macOS.
+
+**Install the plist:**
 
 ```bash
-# Edit crontab
-crontab -e
-
-# Add this line (runs every Monday at 9am)
-0 9 * * 1 cd /path/to/project && /usr/bin/python3 main.py >> cron.log 2>&1
+mkdir -p ~/Library/LaunchAgents
+cp com.jobemailer.weekly.plist ~/Library/LaunchAgents/
 ```
 
-### Schedule Weekly (Windows Task Scheduler)
+Edit `~/Library/LaunchAgents/com.jobemailer.weekly.plist` and update the path to your project directory.
 
-1. Open Task Scheduler
-2. Create Basic Task → Weekly trigger
-3. Action: Start a program → `python` with argument `C:\path\to\main.py`
+**Load the schedule:**
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.jobemailer.weekly.plist
+```
+
+**Unload/stop:**
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.jobemailer.weekly.plist
+```
+
+**Test immediately:**
+
+```bash
+launchctl start com.jobemailer.weekly
+```
 
 ## Configuration
 

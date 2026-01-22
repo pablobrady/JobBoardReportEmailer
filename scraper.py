@@ -41,32 +41,33 @@ def fetch_page(url):
 def parse_jobs(soup):
     """
     Parse job listings from the page.
-
-    NOTE: You'll need to customize these selectors for your specific job board.
-    This is a template showing common patterns.
+    Configured for Craigslist structure.
     """
     jobs = []
 
-    # Example selectors - customize for your target site
-    job_cards = soup.select(".job-card, .job-listing, article.job")
+    # Craigslist selectors
+    job_cards = soup.select("li.cl-static-search-result")
 
     for card in job_cards:
         try:
-            title_elem = card.select_one(".job-title, h2, h3")
-            company_elem = card.select_one(".company, .employer")
-            location_elem = card.select_one(".location, .job-location")
+            title_elem = card.select_one(".title")
+            location_elem = card.select_one(".location")
+            price_elem = card.select_one(".price")
             link_elem = card.select_one("a[href]")
 
             job = {
                 "title": title_elem.get_text(strip=True) if title_elem else "Unknown",
-                "company": company_elem.get_text(strip=True) if company_elem else "Unknown",
+                "company": price_elem.get_text(strip=True) if price_elem else "",
                 "location": location_elem.get_text(strip=True) if location_elem else "Unknown",
                 "url": link_elem.get("href", "") if link_elem else "",
                 "id": None,
             }
 
-            # Create unique ID from title + company
-            job["id"] = f"{job['title']}_{job['company']}".lower().replace(" ", "_")
+            # Create unique ID from URL (most reliable for Craigslist)
+            if job["url"]:
+                job["id"] = job["url"].split("/")[-1].replace(".html", "")
+            else:
+                job["id"] = f"{job['title']}_{job['location']}".lower().replace(" ", "_")
             jobs.append(job)
 
         except Exception as e:

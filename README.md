@@ -1,7 +1,3 @@
-# Weekly Report Emailer
-
-Scrape a job board with requests and BeautifulSoup, then email yourself weekly job alerts.
-
 ## Project Structure
 
 ```text

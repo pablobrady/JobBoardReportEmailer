@@ -121,3 +121,5 @@ Edit `config.py` to customize:
 > Build your own custom automation using only Software 1.0 (no AI API calls).
 
 **Selected Project:** Weekly Report Emailer
+
+> TO RUN LOCALLY:  uv run python main.py

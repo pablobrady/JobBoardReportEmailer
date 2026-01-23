@@ -1,12 +1,13 @@
 [project]
 name = "jobboardreportemailer"
 version = "0.1.0"
-description = "Scrape job boards and send weekly email alerts"
+description = "Scrape a favorite job board and send recurring email alerts"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "beautifulsoup4>=4.14.3",
     "lxml>=6.0.2",
+    "mjml>=0.12.0",
     "python-dotenv>=1.2.1",
     "requests>=2.32.5",
 ]

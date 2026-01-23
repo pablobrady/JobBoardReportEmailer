@@ -13,8 +13,8 @@ SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
 # Job Board Configuration
-JOB_BOARD_URL = os.getenv("JOB_BOARD_URL", "https://example-jobboard.com/jobs")
-SEARCH_KEYWORDS = ["python", "developer", "remote", "frontend", "front-end", "ios", "website"]
+JOB_BOARD_URL = os.getenv("JOB_BOARD_URL", "https://sfbay.craigslist.org/search/jjj")
+SEARCH_KEYWORDS = ["python", "remote", "frontend", "front-end", "web developer"]
 
 # File to track sent jobs (avoid duplicates)
 SENT_JOBS_FILE = "sent_jobs.json"
